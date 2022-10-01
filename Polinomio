@@ -1,0 +1,118 @@
+#include <iostream>
+#include <stdlib.h>
+using namespace std;
+ 
+struct nodo{
+       int coef;
+	   int grado; 
+       struct nodo *sgte;
+};
+ 
+typedef struct nodo *Tlista;
+ 
+void insertarInicio(Tlista &lista, int valor, int grado)
+{
+    Tlista q;
+    q = new(struct nodo);
+    q->coef = valor;
+    q->grado = grado;
+    q->sgte = lista;
+    lista  = q;
+}
+
+
+
+void imprimirLista(Tlista lista)
+{
+ 
+     while(lista != NULL)
+     {
+          cout <<lista->coef <<"x"<<lista->grado<<" "; 
+          lista = lista->sgte;
+          
+     }
+}
+
+void ordenarListaInsert(Tlista lista, int valor, int grado)
+{
+     Tlista actual , siguiente;
+     int aux;
+     
+     Tlista q;
+    q = new(struct nodo);
+    q->coef = valor;
+    q->grado = grado;
+    q->sgte = lista;
+    lista  = q;
+     
+     actual = lista;
+     while(actual->sgte != NULL)
+     {
+          siguiente = actual->sgte;
+          
+          while(siguiente!=NULL)
+          {
+               if(actual->grado > siguiente->grado)
+               {
+                    aux = siguiente->grado;
+                    siguiente->grado = actual->grado;
+                    actual->grado = aux;          
+               }
+               siguiente = siguiente->sgte;                    
+          }    
+          actual = actual->sgte;
+          siguiente = actual->sgte;
+           
+     }
+     
+     cout<<"\n\n\tLista ordenada"<<endl;
+}
+
+void menu1()
+{
+    cout<<"\n\t\tLISTA ENLAZADA SIMPLE\n\n";
+    cout<<" 1. INSERTAR AL INICIO"<<endl;
+    cout<<" 2. IMPRIMIR LISTA"<<endl;
+	cout<<" 3. ORDENAR"<<endl;
+    cout<<"\n INGRESE OPCION: ";
+}
+ 
+ 
+int main()
+{
+    Tlista lista = NULL;
+    int op;     
+    int _dato, _coeficiente;  
+       
+
+ 
+    do
+    {
+        menu1();  
+		cin>> op;
+ 
+        switch(op)
+        {
+            case 1:
+ 
+                 cout<< "\n NUMERO A INSERTAR: "; cin>> _dato; cin>>_coeficiente;
+                 insertarInicio(lista, _dato, _coeficiente);
+            break;
+
+            case 2:
+ 
+                 cout << "\n\n MOSTRANDO LISTA\n\n";
+                 imprimirLista(lista);
+            break;
+ 				case 3:
+  					ordenarListaInsert(lista, _dato, _coeficiente);
+            break;
+           
+                    }
+ 
+        cout<<endl<<endl;
+        
+ 
+    }while(op!=4);
+ 
+}
