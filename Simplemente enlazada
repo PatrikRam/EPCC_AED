@@ -1,0 +1,249 @@
+#include <iostream>
+using std::cout;
+using std::endl;
+
+class Nodo
+{
+public:
+	friend class Lista;
+	Nodo(int dato) {
+		this->dato = dato;
+		this->sig = NULL;
+	}
+	~Nodo(){}
+
+private:
+	int dato;
+	Nodo* sig;
+};
+
+class Lista
+{
+public:
+	Lista() {
+		head = NULL;
+		tam = 0;
+	}
+	~Lista(){
+		while (head != NULL) {
+			Nodo* aux1 = head;
+			head = head->sig;
+			delete aux1;
+		}
+		
+	}
+	void insertar_ordenado_1(int dato) {
+		Nodo* nuevo_nodo = new Nodo(dato);
+		if (head != NULL && head->dato <= dato) {
+			Nodo* aux1 = head;
+			Nodo* aux2 = head;
+			while (aux1 != NULL) {
+				if (aux1->dato >= dato)
+					break;
+				aux2 = aux1;
+				aux1 = aux1->sig;
+			}
+			if (aux1 == NULL) {
+				aux1 = nuevo_nodo;
+				aux2->sig = nuevo_nodo;
+			}
+			else {
+				aux2->sig = nuevo_nodo;
+				nuevo_nodo->sig = aux1;		
+			}
+		}
+		else if (head != NULL && head->dato >= dato) {
+			nuevo_nodo->sig = head;
+			head = nuevo_nodo;
+		}
+		else {
+			head = nuevo_nodo;
+		}
+		tam++;
+	}
+	void insertar_ordenado_2(int dato) {
+		Nodo* nuevo_nodo = new Nodo(dato);
+		if (head != NULL && head->dato >= dato) {
+			Nodo* aux1 = head;
+			Nodo* aux2 = head;
+			while (aux1 != NULL) {
+				if (aux1->dato <= dato)
+					break;
+				aux2 = aux1;
+				aux1 = aux1->sig;
+			}
+			if (aux1 == NULL) {
+				aux1 = nuevo_nodo;
+				aux2->sig = nuevo_nodo;
+			}
+			else {
+				aux2->sig = nuevo_nodo;
+				nuevo_nodo->sig = aux1;
+			}
+		}
+		else if (head != NULL && head->dato <= dato) {
+			nuevo_nodo->sig = head;
+			head = nuevo_nodo;
+		}
+		else {
+			head = nuevo_nodo;
+		}
+		tam++;
+	}
+
+	void eliminar_inicio() {
+		if (head!=NULL){
+			Nodo* aux=head;
+			head=head->sig;
+			delete aux;
+		}
+	}
+	
+	
+	void eliminar_final() {
+	if (head->sig==NULL){
+		Nodo* aux = head;
+		head=NULL;
+		delete aux;
+		tam--;
+	}else if (head->sig!=NULL){
+		Nodo* aux1=head;
+		Nodo* aux2=head;
+		
+		
+		while(aux1->sig!=NULL){
+			aux2=aux1;
+			aux1= aux1->sig;
+		}
+		aux2->sig=NULL;
+		delete aux1;
+		tam--;
+	}
+    }
+    
+	void eliminar_libre(int pos) {
+		
+		if (head!=NULL && pos==0){
+			Nodo* aux1=head;
+			head=head->sig;
+			delete aux1;
+			tam--;	
+		}else if (head->sig!=NULL && pos>0 && pos<tam){
+			Nodo* aux1 = head;
+			Nodo* aux2 = head;	
+			int p=0;
+			
+			while (aux1->sig!=NULL){
+				if (p==pos){
+					break;
+				}
+				aux2=aux1;
+				aux1= aux1->sig;
+				p++;
+				
+			}
+			aux2->sig=aux1->sig;
+			delete aux1;
+			tam--;	
+		}
+	}
+
+	void insertar_inicio(int dato) {
+		Nodo* nuevo_nodo = new Nodo(dato);
+		if (head==NULL){
+			head=nuevo_nodo;
+		}else{
+			nuevo_nodo->sig=head;
+			head=nuevo_nodo;
+		}
+		tam++;
+
+	}
+	void insertar_final(int dato) {
+		Nodo* nuevo_nodo = new Nodo(dato);
+		if(head==NULL){
+			head=nuevo_nodo;
+		}else{
+			Nodo* aux=head;
+			while(aux->sig!=NULL){
+				aux=aux->sig;
+			}
+			aux->sig=nuevo_nodo;
+		}
+		tam++;
+	}
+	void insertar_libre(int dato, int pos) {
+		Nodo* nuevo_nodo = new Nodo(dato);
+		if(head==NULL && pos==0) {
+			head=nuevo_nodo;
+		}
+		else if (head != NULL && pos == 0){
+			nuevo_nodo->sig=head;
+			head=nuevo_nodo;
+		}
+		else if (head != NULL && pos < tam && pos > 0){
+		Nodo* aux1=head;
+		Nodo* aux2=head;
+		int p = 0;
+		while(aux1->sig!=NULL){
+			if (p == pos)
+			    break;
+			p++;
+			aux2 = aux1;
+			aux1 = aux1->sig;
+		}
+		aux2->sig=nuevo_nodo;
+		nuevo_nodo->sig=aux1;	
+	    }
+	    tam++;
+	}
+	const void imprimir() {
+		if (head != NULL) {
+			Nodo* aux1 = head;
+			while (aux1 != NULL) {
+				cout << aux1->dato;
+				if (aux1->sig != NULL)
+					cout << "->";
+				aux1 = aux1->sig;
+			}
+			cout << endl;
+		}
+	}
+	int get_tamanio() {
+		return tam;
+	}
+	
+	bool empty(){
+		if (head == NULL)
+		    return true;
+		return false;
+    }
+
+private:
+	Nodo* head;
+	int tam;
+};
+
+int main()
+{
+	Lista lista;
+     
+	lista.insertar_final(10);
+	lista.imprimir();
+	lista.insertar_final(109);
+	lista.imprimir();
+	lista.insertar_final(1044);
+	lista.imprimir();
+	
+	
+	lista.eliminar_libre(2);
+    lista.imprimir();
+    cout << lista.get_tamanio();
+    
+    if (lista.empty())
+        cout << "Lista vacia" << endl;
+    else 
+        cout << "Lista con Nodos" << endl;
+
+	return 0;
+}
